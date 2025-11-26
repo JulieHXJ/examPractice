@@ -1,0 +1,221 @@
+#include "bigint.hpp"
+
+bigint::bigint()
+{
+	digits.push_back(0);
+}
+bigint::~bigint()
+{}
+
+bigint:: bigint(unsigned int num)
+{
+	if(num == 0)
+	{
+		digits.push_back(0);
+		return;
+	}
+	std::vector<int> temp;//reversed digits
+	while(num > 0)
+	{
+		temp.push_back(num % 10);
+		num /= 10;
+	}
+	for(int i = temp.size() - 1; i >= 0; i--)
+	{
+		digits.push_back(temp[i]);
+	}
+}
+
+bigint::bigint(const bigint &other)
+{	
+	digits = other.digits;
+}
+
+std::string bigint::getNumbers() const {
+	std::string output;
+	for (size_t i = 0; i < digits.size(); i++)
+	{
+		// output += std::to_string(digits[i]);
+		output += '0' + digits[i];
+	}
+	return(output);
+}
+
+
+
+
+bigint& bigint::operator=(const bigint &other){
+	if(this == &other)
+		return(*this);
+	digits = other.digits;
+	return(*this);
+}
+
+bigint& bigint::operator+=(const bigint& num) {
+
+	int digitA;
+	int digitB;
+	int carry = 0;
+	int i = digits.size() - 1;
+	int j = num.digits.size() - 1;
+	std::vector<int> result;
+
+	while(i >= 0 || j >= 0 || carry != 0) {
+		digitA = (i >= 0? (*this).digits[i] : 0);
+		digitB = (j >= 0? num.digits[j] : 0);
+		int res = digitA + digitB + carry;
+		if (res >= 10)
+		{
+			carry = 1;
+		}
+		else
+			carry = 0;
+		result.push_back(res % 10);
+		i--;
+		j--;
+	}
+	//reverse result and write back to digits
+	digits.clear();
+	for (size_t i = 0; i < result.size(); i++)
+	{
+		digits.push_back(result[result.size() - 1 - i]);
+	}
+
+	// remove leading zeros
+	// while ()
+	// {
+	// 	/* code */
+	// }
+	
+	return(*this);
+}
+
+bigint bigint::operator+(const bigint& num) const {
+	bigint res = (*this);
+	res += num;
+	return(res);
+}
+
+// 前置 ++a 
+bigint& bigint::operator++(){
+	(*this) += bigint(1);
+	return(*this);
+}
+
+// 后置 a++
+bigint bigint::operator++(int) {
+	bigint temp = (*this);
+	++(*this);
+	return(temp);
+}
+
+//在 _digits 末尾 push_back(0) n 次
+bigint& bigint::operator<<=(unsigned int n)
+{
+	if (digits.size() == 1 && digits[0] == 0)
+	{
+		return(*this);
+	}
+	for (unsigned int i = 0; i < n; i++)
+	{
+		digits.push_back(0);
+	}
+	return(*this);
+}
+
+// 左移operator<<（返回新对象)逻辑：
+// 复制一个临时对象 tmp（拷贝构造）
+// 对 tmp 做 <<= n
+// 返回 tmp
+bigint bigint::operator<<(unsigned int n) const {
+	bigint temp = (*this);
+	temp <<= n;
+	return(temp);
+}
+
+
+bigint& bigint::operator>>=(unsigned int n) {
+	if(n >= digits.size())
+	{
+		(*this).digits.clear();
+		digits.push_back(0);
+		return(*this);
+	}
+	for(unsigned int i = 0; i < n; i++)
+	{
+		digits.pop_back();
+	}
+	return(*this);
+}
+
+bigint bigint::operator>>(unsigned int n) const {
+	bigint temp = (*this);
+	temp >>= n;
+	return (temp);
+}
+
+unsigned int bigint::to_uint(const bigint& obj) const {
+
+	unsigned int result = 0;
+
+	for (unsigned int i = 0; i < obj.digits.size(); i++)
+	{
+		result = result * 10 + obj.digits[i];
+	}
+	return result;
+}
+
+bigint& bigint::operator>>=(const bigint& n){
+	(*this) >>= to_uint(n);
+	return(*this);
+}
+
+
+
+bool bigint::operator<(const bigint& other) const {
+	int len1 = digits.size();
+	int len2 = other.digits.size();
+	if(len1 != len2)
+		return(len1 < len2);
+	for (int i = 0; i < len1; i++) {
+		if (digits[i] != other.digits[i])
+		{
+			return (digits[i] < other.digits[i]);
+		}
+	}
+	return false;
+}
+
+bool bigint::operator>(const bigint& other) const {
+	return(other < (*this));
+}
+
+bool bigint::operator==(const bigint& other) const {
+	if(digits.size() != other.digits.size())
+		return(false);
+	for (size_t i = 0; i < digits.size(); i++)
+	{
+		if(digits[i] != other.digits[i])
+			return(false);
+	}
+	return(true);
+}
+
+
+bool bigint::operator<=(const bigint& other) const{
+	return ((*this) < other || (*this) == other);
+}
+
+bool bigint::operator>=(const bigint& other) const{
+	return((*this) > other || (*this) == other);
+}
+
+bool bigint::operator!=(const bigint& other) const{
+	return (!((*this) == other));
+}
+
+
+std::ostream& operator<<(std::ostream& os, const bigint& obj){
+	os << obj.getNumbers();
+	return(os);
+}
