@@ -31,25 +31,31 @@ bigint::bigint(const bigint &other)
 	digits = other.digits;
 }
 
-std::string bigint::getNumbers() const {
-	std::string output;
-	for (size_t i = 0; i < digits.size(); i++)
-	{
-		// output += std::to_string(digits[i]);
-		output += '0' + digits[i];
-	}
-	return(output);
-}
-
-
-
-
 bigint& bigint::operator=(const bigint &other){
 	if(this == &other)
 		return(*this);
 	digits = other.digits;
 	return(*this);
 }
+
+std::string bigint::getNumbers() const {
+	std::string output;
+	for (size_t i = 0; i < digits.size(); i++)
+	{
+		output += '0' + digits[i];
+	}
+	return(output);
+}
+
+void bigint::normalize(){
+	while(digits.size() > 1 && digits[0] == 0){
+		digits.erase(digits.begin());
+	}
+	if(digits.empty()){
+		digits.push_back(0);
+	}
+}
+
 
 bigint& bigint::operator+=(const bigint& num) {
 
@@ -80,13 +86,7 @@ bigint& bigint::operator+=(const bigint& num) {
 	{
 		digits.push_back(result[result.size() - 1 - i]);
 	}
-
-	// remove leading zeros
-	// while ()
-	// {
-	// 	/* code */
-	// }
-	
+	normalize();	
 	return(*this);
 }
 
@@ -120,6 +120,7 @@ bigint& bigint::operator<<=(unsigned int n)
 	{
 		digits.push_back(0);
 	}
+	normalize();//ex: 1099 << 1
 	return(*this);
 }
 
@@ -134,43 +135,65 @@ bigint bigint::operator<<(unsigned int n) const {
 }
 
 
-bigint& bigint::operator>>=(unsigned int n) {
-	if(n >= digits.size())
+// bigint& bigint::operator>>=(unsigned int n) {
+// 	if(n >= digits.size())
+// 	{
+// 		(*this).digits.clear();
+// 		digits.push_back(0);
+// 		return(*this);
+// 	}
+// 	for(unsigned int i = 0; i < n; i++)
+// 	{
+// 		digits.pop_back();
+// 	}
+// 	normalize();
+// 	return(*this);
+// }
+
+// bigint bigint::operator>>(unsigned int n) const {
+// 	bigint temp = (*this);
+// 	temp >>= n;
+// 	return (temp);
+// }
+
+// unsigned int bigint::to_uint(const bigint& obj) const {
+
+// 	unsigned int result = 0;
+
+// 	for (unsigned int i = 0; i < obj.digits.size(); i++)
+// 	{
+// 		result = result * 10 + obj.digits[i];
+// 	}
+// 	return result;
+// }
+
+// bigint& bigint::operator>>=(const bigint& n){
+// 	(*this) >>= to_uint(n);
+// 	return(*this);
+// }
+
+
+bigint& bigint::operator>>=(const bigint& num){
+	//put digits in to unsigned int
+	unsigned int n = 0;
+	for (unsigned int i = 0; i < num.digits.size(); i++){
+		n = n * 10 + num.digits[i];
+	}
+
+	//if int >= size return 0;
+	if (n >= digits.size())
 	{
-		(*this).digits.clear();
+		digits.clear();
 		digits.push_back(0);
 		return(*this);
 	}
-	for(unsigned int i = 0; i < n; i++)
-	{
+	for(unsigned int i = 0; i < n; i++){
 		digits.pop_back();
 	}
-	return(*this);
+	normalize();
+	return (*this);
+
 }
-
-bigint bigint::operator>>(unsigned int n) const {
-	bigint temp = (*this);
-	temp >>= n;
-	return (temp);
-}
-
-unsigned int bigint::to_uint(const bigint& obj) const {
-
-	unsigned int result = 0;
-
-	for (unsigned int i = 0; i < obj.digits.size(); i++)
-	{
-		result = result * 10 + obj.digits[i];
-	}
-	return result;
-}
-
-bigint& bigint::operator>>=(const bigint& n){
-	(*this) >>= to_uint(n);
-	return(*this);
-}
-
-
 
 bool bigint::operator<(const bigint& other) const {
 	int len1 = digits.size();
