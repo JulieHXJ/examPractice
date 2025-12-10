@@ -16,11 +16,10 @@ public:
 	vect2& operator=(const vect2 &other);
 	~vect2();
 
+	// int getX() const {return x;}
+	// int getY() const {return y;}
 
-
-	int getX() const {return x;}
-	int getY() const {return y;}
-
+	//[] for const and non-const
 	int& operator[](int index);
 	int operator[](int index) const;
 
@@ -29,7 +28,6 @@ public:
 	vect2 operator++(int num);//change value and return old
 	vect2& operator--();
 	vect2 operator--(int num);
-
 
 	// calculations (return itself)
 	vect2& operator+=(const vect2& obj);
@@ -41,10 +39,8 @@ public:
 	vect2 operator-(const vect2& obj) const;
 	vect2 operator*(int num) const; // v3 * 2
 
-
-	// minus -v2
+	// -v2 return new value
 	vect2 operator-() const;
-
 
 	// comparison
 	bool operator== (const vect2& obj) const;
@@ -54,7 +50,6 @@ public:
 
 //3 * v2
 vect2 operator*(int num, const vect2& obj);
-
 
 std::ostream& operator<<(std::ostream& os, const vect2& v);
 

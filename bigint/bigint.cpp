@@ -192,7 +192,6 @@ bigint& bigint::operator>>=(const bigint& num){
 	}
 	normalize();
 	return (*this);
-
 }
 
 bool bigint::operator<(const bigint& other) const {

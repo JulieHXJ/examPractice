@@ -25,43 +25,36 @@ vect2& vect2::operator=(const vect2& other){
 	return (*this);
 }
 
-vect2::~vect2(){
-}
+vect2::~vect2(){}
 
+//for printing and assign v1[1] = 12;
 int& vect2::operator[](int index){
-	if(index == 0){
+	if(index == 0)
 		return this->x;
-	}
-	else 
-	{
-		return this->y;
-	}
-	
-}
-
-
-int vect2::operator[](int index) const{
-	if(index == 0){
-		return this->x;
-	}
 	else
-	{
 		return this->y;
-	}
 }
 
+//for printing v1[0] and v1[1], only readable
+int vect2::operator[](int index) const{
+	if(index == 0)
+		return this->x;
+	else
+		return this->y;
+}
+
+//++v
 vect2& vect2::operator++(){
-	this->x += 1;
-	this->y += 1;
+	this->x++;
+	this->y++;
 	return (*this);
 
 }
 
-vect2 vect2::operator++(int num) {
-	(void)num;
+//v++
+vect2 vect2::operator++(int) {
 	vect2 temp = (*this);
-	this->x += 1;
-	this->y += 1;
+	++(*this);
 	return (temp);
 }
 
@@ -71,11 +64,9 @@ vect2& vect2::operator--(){
 	return (*this);
 }
 
-vect2 vect2::operator--(int num){
-	(void)num;
+vect2 vect2::operator--(int){
 	vect2 temp = (*this);
-	this->x -= 1;
-	this->y -= 1;
+	--(*this);
 	return (temp);
 }
 
@@ -98,23 +89,20 @@ vect2& vect2::operator*=(int num) {
 }
 
 vect2 vect2::operator+(const vect2& obj) const {
-	vect2 temp = (*this);
-	temp.x += obj.x;
-	temp.y += obj.y;
+	vect2 temp(*this);
+	temp += obj;
 	return (temp);
 }
 
 vect2 vect2::operator-(const vect2& obj) const {
-	vect2 temp = (*this);
-	temp.x -= obj.x;
-	temp.y -= obj.y;
+	vect2 temp(*this);
+	temp -= obj;
 	return (temp);
 }
 
 vect2 vect2::operator*(int num) const {
-	vect2 temp = (*this);
-	temp.x *= num;
-	temp.y *= num;
+	vect2 temp(*this);
+	temp *= num;
 	return (temp);
 }
 
@@ -128,7 +116,7 @@ vect2 vect2::operator-() const {
 
 //comparison
 bool vect2::operator==(const vect2& obj) const {
-	if ((this->x == obj.x) && (this->y == obj.y))
+	if (x == obj.x && y == obj.y)
 	{
 		return true;
 	}
@@ -144,7 +132,7 @@ bool vect2::operator!=(const vect2& obj) const {
 }
 
 
-//不能直接使用x/y，因为是private。需要调用public函数
+//for 3 * v2; 
 vect2 operator*(int num, const vect2& obj) {
 	vect2 temp(obj);
 	temp *= num;
@@ -154,6 +142,6 @@ vect2 operator*(int num, const vect2& obj) {
 
 
 std::ostream& operator<<(std::ostream& os, const vect2& v){
-	os << "{" << v.getX() << ", " << v.getY() << "}";
+	os << "{" << v[0] << ", " << v[1] << "}";
 	return os;
 }
