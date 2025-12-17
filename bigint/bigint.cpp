@@ -20,9 +20,9 @@ bigint:: bigint(unsigned int num)
 		temp.push_back(num % 10);
 		num /= 10;
 	}
-	for(int i = temp.size() - 1; i >= 0; i--)
+	for(int i = temp.size(); i > 0; i--)
 	{
-		digits.push_back(temp[i]);
+		digits.push_back(temp[i - 1]);
 	}
 }
 
@@ -38,14 +38,6 @@ bigint& bigint::operator=(const bigint &other){
 	return(*this);
 }
 
-std::string bigint::getNumbers() const {
-	std::string output;
-	for (size_t i = 0; i < digits.size(); i++)
-	{
-		output += '0' + digits[i];
-	}
-	return(output);
-}
 
 void bigint::normalize(){
 	while(digits.size() > 1 && digits[0] == 0){
@@ -54,6 +46,17 @@ void bigint::normalize(){
 	if(digits.empty()){
 		digits.push_back(0);
 	}
+}
+
+std::string bigint::getNumbers() const {
+	bigint temp = (*this);
+	temp.normalize();
+	std::string output;
+	for (size_t i = 0; i < temp.digits.size(); i++)
+	{
+		output += '0' + temp.digits[i];
+	}
+	return(output);
 }
 
 bigint& bigint::operator+=(const bigint& num) {
@@ -70,9 +73,7 @@ bigint& bigint::operator+=(const bigint& num) {
 		digitB = (indexB >= 0? num.digits[indexB] : 0);
 		int res = digitA + digitB + carry;
 		if (res >= 10)
-		{
 			carry = 1;
-		}
 		else
 			carry = 0;
 		result.push_back(res % 10);
@@ -85,7 +86,6 @@ bigint& bigint::operator+=(const bigint& num) {
 	{
 		digits.push_back(result[result.size() - 1 - i]);
 	}
-	normalize();	
 	return(*this);
 }
 
@@ -112,14 +112,9 @@ bigint bigint::operator++(int) {
 bigint& bigint::operator<<=(unsigned int n)
 {
 	if (digits.size() == 1 && digits[0] == 0)
-	{
 		return(*this);
-	}
 	for (unsigned int i = 0; i < n; i++)
-	{
 		digits.push_back(0);
-	}
-	normalize();//ex: 1099 << 1
 	return(*this);
 }
 
@@ -133,6 +128,25 @@ bigint bigint::operator<<(unsigned int n) const {
 	return(temp);
 }
 
+bigint& bigint::operator>>=(unsigned int n) {
+	if(n >= digits.size())
+	{
+		digits.clear();
+		digits.push_back(0);
+		return(*this);
+	}
+	for(unsigned int i = 0; i < n; i++)
+	{
+		digits.pop_back();
+	}
+	return(*this);
+}
+
+bigint bigint::operator>>(unsigned int n) const {
+	bigint temp = (*this);
+	temp >>= n;
+	return (temp);
+}
 
 bigint& bigint::operator>>=(const bigint& num){
 	//put digits in to unsigned int
@@ -141,32 +155,22 @@ bigint& bigint::operator>>=(const bigint& num){
 		n = n * 10 + num.digits[i];
 	}
 
-	//if int >= size return 0;
-	if (n >= digits.size())
-	{
-		digits.clear();
-		digits.push_back(0);
-		return(*this);
-	}
-	for(unsigned int i = 0; i < n; i++){
-		digits.pop_back();
-	}
-	normalize();
+	(*this) >>= n;
 	return (*this);
 }
 
 bool bigint::operator<(const bigint& other) const {
-	int len1 = digits.size();
-	int len2 = other.digits.size();
-	if(len1 != len2)
-		return(len1 < len2);
-	for (int i = 0; i < len1; i++) {
-		if (digits[i] != other.digits[i])
+	size_t len1 = digits.size();
+	size_t len2 = other.digits.size();
+	if(len1 == len2){
+		for (size_t i = 0; i < len1; i++)
 		{
-			return (digits[i] < other.digits[i]);
+			if (digits[i] != other.digits[i]){
+				return (digits[i] < other.digits[i]? true : false);
+			}
 		}
 	}
-	return false;
+	return (len1 < len2? true: false);
 }
 
 bool bigint::operator>(const bigint& other) const {
@@ -174,14 +178,15 @@ bool bigint::operator>(const bigint& other) const {
 }
 
 bool bigint::operator==(const bigint& other) const {
-	if(digits.size() != other.digits.size())
-		return(false);
-	for (size_t i = 0; i < digits.size(); i++)
-	{
-		if(digits[i] != other.digits[i])
-			return(false);
+	if(digits.size() == other.digits.size()){
+		for (size_t i = 0; i < digits.size(); i++)
+		{
+			if (digits[i] != other.digits[i])
+            	return false;
+		}
+		return true;
 	}
-	return(true);
+	return(false);
 }
 
 

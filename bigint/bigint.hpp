@@ -2,8 +2,6 @@
 #define BIGINT_HPP
 
 #include <iostream>
-#include <string>
-#include <sstream>
 #include <vector>
 
 class bigint
@@ -14,11 +12,8 @@ private:
 public:
 	bigint(); // 默认值 = 0
 	~bigint();
-	// constructor takes number
 	bigint(unsigned int num);// 用普通 int 初始化 
-	// copy constructor for bigint e(d);
 	bigint(const bigint &other);
-	// assign
 	bigint& operator=(const bigint &other);
 
 	//print helper
@@ -32,12 +27,12 @@ public:
 
 
 	// shift operators <<, >>, <<=, >>=
-	bigint operator<<(unsigned int n)const;//return new object
+	bigint& operator<<=(unsigned int n);
+	bigint operator<<(unsigned int n)const;
 	bigint operator>>(unsigned int n)const;
-	bigint& operator<<=(unsigned int n);//overwrite current object, may have leading 0
-	bigint& operator>>=(unsigned int n);//overwrite current object
+	bigint& operator>>=(unsigned int n);
 
-	unsigned int to_uint(const bigint& obj) const;
+	// unsigned int to_uint(const bigint& obj) const;
 	bigint& operator>>=(const bigint& n);
 
 
