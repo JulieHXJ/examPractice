@@ -32,9 +32,9 @@ bigint::bigint(const bigint &other)
 }
 
 bigint& bigint::operator=(const bigint &other){
-	if(this == &other)
-		return(*this);
-	digits = other.digits;
+	if(this != &other){
+		digits = other.digits;
+	}
 	return(*this);
 }
 
@@ -56,19 +56,18 @@ void bigint::normalize(){
 	}
 }
 
-
 bigint& bigint::operator+=(const bigint& num) {
 
 	int digitA;
 	int digitB;
 	int carry = 0;
-	int i = digits.size() - 1;
-	int j = num.digits.size() - 1;
+	int indexA = digits.size() - 1;
+	int indexB = num.digits.size() - 1;
 	std::vector<int> result;
 
-	while(i >= 0 || j >= 0 || carry != 0) {
-		digitA = (i >= 0? (*this).digits[i] : 0);
-		digitB = (j >= 0? num.digits[j] : 0);
+	while(indexA >= 0 || indexB >= 0 || carry != 0) {
+		digitA = (indexA >= 0? digits[indexA] : 0);
+		digitB = (indexB >= 0? num.digits[indexB] : 0);
 		int res = digitA + digitB + carry;
 		if (res >= 10)
 		{
@@ -77,8 +76,8 @@ bigint& bigint::operator+=(const bigint& num) {
 		else
 			carry = 0;
 		result.push_back(res % 10);
-		i--;
-		j--;
+		indexA--;
+		indexB--;
 	}
 	//reverse result and write back to digits
 	digits.clear();
@@ -133,44 +132,6 @@ bigint bigint::operator<<(unsigned int n) const {
 	temp <<= n;
 	return(temp);
 }
-
-
-// bigint& bigint::operator>>=(unsigned int n) {
-// 	if(n >= digits.size())
-// 	{
-// 		(*this).digits.clear();
-// 		digits.push_back(0);
-// 		return(*this);
-// 	}
-// 	for(unsigned int i = 0; i < n; i++)
-// 	{
-// 		digits.pop_back();
-// 	}
-// 	normalize();
-// 	return(*this);
-// }
-
-// bigint bigint::operator>>(unsigned int n) const {
-// 	bigint temp = (*this);
-// 	temp >>= n;
-// 	return (temp);
-// }
-
-// unsigned int bigint::to_uint(const bigint& obj) const {
-
-// 	unsigned int result = 0;
-
-// 	for (unsigned int i = 0; i < obj.digits.size(); i++)
-// 	{
-// 		result = result * 10 + obj.digits[i];
-// 	}
-// 	return result;
-// }
-
-// bigint& bigint::operator>>=(const bigint& n){
-// 	(*this) >>= to_uint(n);
-// 	return(*this);
-// }
 
 
 bigint& bigint::operator>>=(const bigint& num){
