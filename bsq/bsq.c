@@ -9,16 +9,7 @@
 //  - The characters can be any printable character, even numbers.
 //  - In case of an invalid map, your program should display "map error" on the error output followed by a line break. Your program will then move on to the next map.
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
 
-typedef struct {
-    int rows,  cols;
-    char empty, obstacle, full;          // 填充字符
-    char **grid;        // 地图网格
-} Map;
 
 // 直接从文件解析第一行（更简单的方法）
 int parse_header(FILE *file, Map *map)
