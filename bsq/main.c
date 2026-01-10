@@ -1,5 +1,3 @@
-// #include "bsq.h"
-
 
 #include <stdio.h>
 #include <unistd.h>
