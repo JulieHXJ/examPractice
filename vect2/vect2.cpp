@@ -131,15 +131,12 @@ bool vect2::operator!=(const vect2& obj) const {
 	return true;
 }
 
-
 //for 3 * v2; 
 vect2 operator*(int num, const vect2& obj) {
 	vect2 temp(obj);
 	temp *= num;
 	return (temp);
 }
-
-
 
 std::ostream& operator<<(std::ostream& os, const vect2& v){
 	os << "{" << v[0] << ", " << v[1] << "}";

@@ -210,7 +210,6 @@ void solve_map(t_map *map){
 	print_map(map);
 }
 
-
 //read from stdin or argv
 void ft_bsq(FILE *file, t_map *map){
 	

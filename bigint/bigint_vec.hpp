@@ -1,4 +1,4 @@
-#ifndef BIGINT_HPP
+#ifndef BIGINT_VEC_HPP
 #define BIGINT_HPP
 
 #include <iostream>
@@ -10,18 +10,19 @@ private:
 	std::vector<int> digits; // store each digit separately in right order
 
 public:
-	bigint(); // 默认值 = 0
-	~bigint();
-	bigint(unsigned int num);// 用普通 int 初始化 
-	bigint(const bigint &other);
-	bigint& operator=(const bigint &other);
+	bigint() { digits.push_back(0); }; //default 0
+	~bigint() {};
+	bigint(unsigned int num);
+	bigint(const bigint &other): digits(other.digits) {};
+
 
 	//print helper
 	std::string getNumbers() const;
 
-	// addition +, +=, ++i, i++
+	// addition +, +=
 	bigint& operator+=(const bigint& num);//overwrite current object, may have leading 0
 	bigint operator+(const bigint& num) const;//return new object
+	// increment ++
 	bigint& operator++(); // prefix ++i 
 	bigint operator++(int); // postfix i++ 
 
@@ -29,9 +30,9 @@ public:
 	// shift operators <<, >>, <<=, >>=
 	bigint& operator<<=(unsigned int n);
 	bigint operator<<(unsigned int n)const;
-	bigint operator>>(unsigned int n)const;
 	bigint& operator>>=(unsigned int n);
-
+	
+	bigint operator>>(unsigned int n)const;
 	// unsigned int to_uint(const bigint& obj) const;
 	bigint& operator>>=(const bigint& n);
 
@@ -49,8 +50,5 @@ public:
 };
 
 std::ostream& operator<<(std::ostream& os, const bigint& obj);
-
-
-
 
 #endif // BIGINT_HPP

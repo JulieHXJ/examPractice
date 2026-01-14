@@ -1,11 +1,4 @@
-#include "bigint.hpp"
-
-bigint::bigint()
-{
-	digits.push_back(0);
-}
-bigint::~bigint()
-{}
+#include "bigint_vec.hpp"
 
 bigint:: bigint(unsigned int num)
 {
@@ -25,19 +18,6 @@ bigint:: bigint(unsigned int num)
 		digits.push_back(temp[i - 1]);
 	}
 }
-
-bigint::bigint(const bigint &other)
-{	
-	digits = other.digits;
-}
-
-bigint& bigint::operator=(const bigint &other){
-	if(this != &other){
-		digits = other.digits;
-	}
-	return(*this);
-}
-
 
 void bigint::normalize(){
 	while(digits.size() > 1 && digits[0] == 0){
